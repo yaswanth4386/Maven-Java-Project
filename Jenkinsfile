@@ -4,6 +4,9 @@ def remote = [:]
     	remote.host = '192.168.33.15'
     	remote.user = 'root'
     	remote.password = 'vagrant'
+	 	remote.host = '192.168.56.65'
+    	remote.user = 'ansible'
+    	remote.password = 'ansible'
     	remote.allowAnyHosts = true
 pipeline {
     
@@ -95,10 +98,11 @@ pipeline {
             }
 			steps {
 				unstash 'Source'
-				sh "'${mvnHome}/bin/mvn' clean package"	
-				sshPublisher(publishers: [sshPublisherDesc(configName: 'ansible-controller', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''cd ansible-files
-git pull origin master
-ansible-playbook ansibleRoles/tomcat.yml''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'ansible-files/ansibleRoles/tomcat/files', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '**/*.war')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+				sh "'${mvnHome}/bin/mvn' clean deploy"	
+				sshPut remote: remote, from: 'target/java-maven-1.0-SNAPSHOT.war', into: '/home/ansible/ansible-files/ansibleRoles/tomcat/files/webapp1.war'		        
+				//sshPublisher(publishers: [sshPublisherDesc(configName: 'ansible-controller', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''cd ansible-files
+//git pull origin master
+//ansible-playbook ansibleRoles/tomcat.yml''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'ansible-files/ansibleRoles/tomcat/files', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '**/*.war')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
 			}
 			post {
 				always {
