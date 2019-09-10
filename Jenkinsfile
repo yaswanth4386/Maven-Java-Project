@@ -4,10 +4,10 @@ def remote = [:]
     	remote.host = '192.168.33.15'
     	remote.user = 'root'
     	remote.password = 'vagrant'
-	remote.host = '192.168.56.65'
-    	remote.user = 'ansible'
-    	remote.password = 'ansible'
-    	remote.allowAnyHosts = true
+	//remote.host = '192.168.56.65'
+    	//remote.user = 'ansible'
+    	//remote.password = 'ansible'
+    	//remote.allowAnyHosts = true
 pipeline {
     
 	agent none
